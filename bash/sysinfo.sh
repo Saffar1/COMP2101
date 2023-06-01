@@ -1,14 +1,15 @@
 #!/bin/bash
 
-fqdn=$(hostname)
-echo "Fully-Qualified Domain Name (FQDN): $fqdn"
+# Output template
+output_template="
+Report for $(hostname)
+===============
+FQDN: $(hostname --fqdn)
+Operating System name and version: $(lsb_release -d | awk -F'\t' '{print $2}')
+IP Address: $(ip route get 8.8.8.8 | awk '{print $7}')
+Root Filesystem Free Space: $(df -h / | awk 'NR==2 {print $4}')
+===============
+"
 
-os_info=$(hostnamectl | grep "Operating System")
-echo "$os_info"
-
-ip_addresses=$(hostname -I | grep -v '^127')
-echo "IP Addresses: $ip_addresses"
-
-root_space=$(df -h / | awk 'NR==2{print $4}')
-echo "Root Filesystem Space Available: $root_space"
-
+# Display the output
+echo "$output_template"
